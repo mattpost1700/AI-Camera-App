@@ -15,7 +15,8 @@ public class SettingsActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.settings, new SettingsFragment())
+                    //R.id.settingsListView was just R.id.settings... not sure if it got renamed without refactoring
+                    .replace(R.id.settingsListView, new SettingsFragment())
                     .commit();
         }
         ActionBar actionBar = getSupportActionBar();

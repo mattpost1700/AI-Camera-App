@@ -17,33 +17,42 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme" />
 
-    <com.camerakit.CameraKitView
-        android:id="@+id/camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:adjustViewBounds="true"
-        app:camera_facing="back"
-        app:camera_focus="continuous"
-        app:camera_imageJpegQuality="100"
-        app:camera_imageMegaPixels="2.0"
-        app:camera_permissions="camera"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+    <!--Switched UI elements to more standard ones.
+        Before, the place where we were going to display the image
+        was using code that wasn't in the Android Library and
+        ultimately I couldn't find any good documentation on
+        how to effectively use it. I also changed the floating
+        action buttons to regular buttons, but we could change that
+        back for aesthetic reasons. Right now I just want to get something
+        down that other people can work on-->
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButtonTakePicture"
+    <ImageView
+        android:id="@+id/imageCapture"
+        android:layout_width="173dp"
+        android:layout_height="269dp"
+        android:layout_marginStart="116dp"
+        android:layout_marginTop="112dp"
+        app:layout_constraintStart_toStartOf="@+id/toolbar"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        app:srcCompat="@android:drawable/picture_frame" />
+
+    <Button
+        android:id="@+id/captureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="36dp"
-        android:clickable="true"
-        android:contentDescription="Button to capture image"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="180dp"
+        android:text="@string/capture_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@android:drawable/ic_menu_camera"
-        app:useCompatPadding="false" />
+        app:layout_constraintTop_toBottomOf="@+id/imageCapture" />
+
+    <Button
+        android:id="@+id/analyzeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:text="@string/analyze_button"
+        app:layout_constraintStart_toEndOf="@+id/captureButton"
+        app:layout_constraintTop_toTopOf="@+id/captureButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
