@@ -40,11 +40,11 @@
         android:id="@+id/captureButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="180dp"
+        android:layout_marginStart="52dp"
+        android:layout_marginTop="92dp"
         android:text="@string/capture_button"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageCapture" />
+        app:layout_constraintTop_toBottomOf="@+id/predictions" />
 
     <Button
         android:id="@+id/analyzeButton"
@@ -54,5 +54,13 @@
         android:text="@string/analyze_button"
         app:layout_constraintStart_toEndOf="@+id/captureButton"
         app:layout_constraintTop_toTopOf="@+id/captureButton" />
+
+    <TextView
+        android:id="@+id/predictions"
+        android:layout_width="171dp"
+        android:layout_height="87dp"
+        android:text="@string/predictions"
+        app:layout_constraintStart_toStartOf="@+id/imageCapture"
+        app:layout_constraintTop_toBottomOf="@+id/imageCapture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

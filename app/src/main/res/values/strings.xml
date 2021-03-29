@@ -20,4 +20,5 @@
     <!-- New Strings added here. Do we need the above strings? -->
     <string name="capture_button">Take Photo</string>
     <string name="analyze_button">Guess Digit</string>
+    <string name="predictions">Predictions</string>
 </resources>

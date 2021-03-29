@@ -19,12 +19,16 @@ import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,8 +39,26 @@ public class MainActivity extends AppCompatActivity {
             Manifest.permission.WRITE_EXTERNAL_STORAGE};
     private String currentPhotoPath;
     private ImageView imageView;
+    private Bitmap bitmapForAnalysis;
     private Button captureButton;
     private Button analyzeButton;
+    private TextView prediction;
+
+    /*I'll be adding other models that we can experiment with
+      to the project. In order to use a different model, replace
+      MODEL_PATH with the title of the correct model in the ml directory
+     */
+
+    private static final String MODEL_PATH = "model_for_digits_ver_0.1.tflite";
+    /*There's a different type of model called Quant, however, it might
+      be deprecated. Always keep false for now.
+      */
+    private static final boolean QUANT = false;
+    private static final String LABEL_PATH = "labels.txt";
+    private static final int INPUT_SIZE = 224;
+
+    private Classifier classifier;
+    private Executor executor = Executors.newSingleThreadExecutor();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
         captureButton = findViewById(R.id.captureButton);
         analyzeButton = findViewById(R.id.analyzeButton);
         imageView = findViewById(R.id.imageCapture);
+        prediction = findViewById(R.id.predictions);
+
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 analyzeImage();
             }
         });
+        initTensorFlowAndLoadModel();
     }
 
     //Oh pretty please...
@@ -77,9 +102,25 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
         }
     }
+
+    /*This is necessary into order to properly release resources,
+      the garbage collector doesn't just do it on its own.
+    */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                classifier.close();
+            }
+        });
+    }
+
     private void displayImage(){
         if(currentPhotoPath != null){
             Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
+            bitmapForAnalysis = temp;
             imageView.setImageBitmap(temp);
         }
         else{
@@ -115,9 +156,31 @@ public class MainActivity extends AppCompatActivity {
         return bitmap;
     }
 
+    //This creates model from the TensorFlow lite file
+    private void initTensorFlowAndLoadModel() {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    classifier = TensorFlowImageClassifier.create(
+                            getAssets(),
+                            MODEL_PATH,
+                            LABEL_PATH,
+                            INPUT_SIZE,
+                            QUANT);
+                } catch (final Exception e) {
+                    throw new RuntimeException("Error initializing TensorFlow!", e);
+                }
+            }
+        });
+    }
+
     //This method will launch the predictions_activity
     private void analyzeImage() {
+        bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
 
+        final List<Classifier.Recognition> results = classifier.recognizeImage(bitmapForAnalysis);
+        prediction.setText(results.toString());
 
     }
 
