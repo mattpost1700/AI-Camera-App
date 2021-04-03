@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private Button captureButton;
     private Button analyzeButton;
     private TextView prediction;
+    private boolean checkPicture = false;
 
     /*I'll be adding other models that we can experiment with
       to the project. In order to use a different model, replace
@@ -64,7 +65,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Please push me!
         getPermission();
         captureButton = findViewById(R.id.captureButton);
         analyzeButton = findViewById(R.id.analyzeButton);
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void displayImage(){
         if(currentPhotoPath != null){
+            checkPicture = true;
             Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
             bitmapForAnalysis = temp;
             imageView.setImageBitmap(temp);
@@ -177,11 +178,15 @@ public class MainActivity extends AppCompatActivity {
 
     //This method will launch the predictions_activity
     private void analyzeImage() {
-        bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
+        if (checkPicture) { //if user did select a picture
+            bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
 
-        final List<Classifier.Recognition> results = classifier.recognizeImage(bitmapForAnalysis);
-        prediction.setText(results.toString());
-
+            final List<Classifier.Recognition> results = classifier.recognizeImage(bitmapForAnalysis);
+            Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_LONG).show();
+            prediction.setText(results.toString());
+        }
+        else //if user didn't select a picture, will just simply display a toast message
+            Toast.makeText(this, "No image has been selected", Toast.LENGTH_LONG).show();
     }
 
     private File createImageFile() throws IOException {

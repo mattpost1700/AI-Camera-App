@@ -21,4 +21,5 @@
     <string name="capture_button">Take Photo</string>
     <string name="analyze_button">Guess Digit</string>
     <string name="predictions">Predictions</string>
+    <string name="the_image_preview">The image preview</string>
 </resources>
