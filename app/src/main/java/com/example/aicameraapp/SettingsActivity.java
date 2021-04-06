@@ -33,13 +33,13 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch(id){
-            case R.id.toPrediction:
+            case R.id.toMain:
                 Log.e("info", "toMain clicked");
                 Activity activity = new MainActivity();
                 Intent intent = new Intent(this, MainActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.toSettings:
+            case R.id.toPrediction:
                 Log.e("info", "toPrediction clicked");
                 Activity activity2 = new PredictionActivity();
                 Intent intent2 = new Intent(this, PredictionActivity.class);
