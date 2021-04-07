@@ -55,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
       MODEL_PATH with the title of the correct model in the ml directory
      */
 
-    private static final String MODEL_PATH = "model_for_digits_ver_0.1.tflite";
+    /*A new and improved model has been added to the ml folder and it's path
+      has replaced the old one in this variable.
+     */
+    private static final String MODEL_PATH = "model_for_digits_ver_0.2.tflite";
     /*There's a different type of model called Quant, however, it might
       be deprecated. Always keep false for now.
       */
@@ -189,7 +192,9 @@ public class MainActivity extends AppCompatActivity {
             bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
 
             final List<Classifier.Recognition> results = classifier.recognizeImage(bitmapForAnalysis);
-            Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_LONG).show();
+
+            //This toast has been made shorter.
+            Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_SHORT).show();
             prediction.setText(results.toString());
         }
         else //if user didn't select a picture, will just simply display a toast message
