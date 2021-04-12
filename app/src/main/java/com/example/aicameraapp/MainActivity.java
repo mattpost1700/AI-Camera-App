@@ -58,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     /*A new and improved model has been added to the ml folder and it's path
       has replaced the old one in this variable.
      */
-    private static final String MODEL_PATH = "model_for_digits_ver_0.2.tflite";
+    private static final String MODEL_PATH = "model_for_digits_ver_0.3.tflite";
     /*There's a different type of model called Quant, however, it might
       be deprecated. Always keep false for now.
       */
