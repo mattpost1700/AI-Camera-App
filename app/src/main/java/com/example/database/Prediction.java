@@ -1,5 +1,7 @@
 package com.example.database;
 
+import android.graphics.Color;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -23,6 +25,7 @@ public class Prediction {
     @ColumnInfo(name = "prediction_string")
     public String prediction_string;
 
-    @ColumnInfo(name = "image_byte_arr")
+    // from https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
+    @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
     public String image_byte_arr;
 }
