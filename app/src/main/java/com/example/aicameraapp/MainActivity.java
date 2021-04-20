@@ -10,6 +10,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -38,6 +39,7 @@ import java.util.concurrent.Executors;
 public class MainActivity extends AppCompatActivity {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1001;
+    private static final int REQUEST_IMAGE_SELECT = 1002;
     public static final int MULTIPLE_PERMISSIONS = 100;
     public static final String[] permissions = {Manifest.permission.CAMERA,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -47,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap bitmapForAnalysis;
     private Button captureButton;
     private Button analyzeButton;
+    private Button importButton;
     private TextView prediction;
     private boolean checkPicture = false;
 
@@ -66,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
     private static final String LABEL_PATH = "labels.txt";
     private static final int INPUT_SIZE = 224;
 
+
     private Classifier classifier;
     private Executor executor = Executors.newSingleThreadExecutor();
+    private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
         getPermission();
         captureButton = findViewById(R.id.captureButton);
         analyzeButton = findViewById(R.id.analyzeButton);
+        importButton = findViewById(R.id.importButton);
         imageView = findViewById(R.id.imageCapture);
         prediction = findViewById(R.id.predictions);
 
@@ -91,6 +97,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 analyzeImage();
+            }
+        });
+        importButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
             }
         });
         initTensorFlowAndLoadModel();
@@ -246,8 +258,12 @@ public class MainActivity extends AppCompatActivity {
         if(requestCode == REQUEST_IMAGE_CAPTURE) {
             displayImage();
         }
+        else if(requestCode == REQUEST_IMAGE_SELECT){
+            displaySelectedImage(data);
+        }
     }
 
+    //create menu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -255,6 +271,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //logic for menu item
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -274,5 +291,25 @@ public class MainActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, REQUEST_IMAGE_SELECT);
+    }
+
+    private void displaySelectedImage(Intent data){
+            checkPicture = true;
+            Uri selectedImage = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = getContentResolver().query(selectedImage,
+                    filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            currentPhotoPath = cursor.getString(columnIndex);
+            cursor.close();
+            Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
+            bitmapForAnalysis = temp;
+            imageView.setImageBitmap(temp);
     }
 }

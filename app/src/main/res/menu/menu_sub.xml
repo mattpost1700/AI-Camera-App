@@ -2,17 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.aicameraapp.SettingsActivity">
+    tools:context="com.example.aicameraapp.PredictionActivity">
 
     <item
         android:id="@+id/toMain"
         android:orderInCategory="100"
         android:title="@string/scan"
-        app:showAsAction="never" />
-
-    <item
-        android:id="@+id/toPrediction"
-        android:orderInCategory="100"
-        android:title="@string/prediction_stats"
         app:showAsAction="never" />
 </menu>

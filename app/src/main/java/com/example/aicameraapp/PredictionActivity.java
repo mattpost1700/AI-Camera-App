@@ -1,7 +1,5 @@
 package com.example.aicameraapp;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -23,28 +21,18 @@ public class PredictionActivity  extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_prediction, menu);
+        getMenuInflater().inflate(R.menu.menu_sub, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch(id){
-            case R.id.toMain:
-                Log.e("info", "toMain clicked");
-                Activity activity = new MainActivity();
-                Intent intent = new Intent(this, MainActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.toSettings:
-                Log.e("info", "toSettings clicked");
-                Activity activity2 = new SettingsActivity();
-                Intent intent2 = new Intent(this, SettingsActivity.class);
-                startActivity(intent2);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (id == R.id.toMain) {
+            Log.e("info", "toMain clicked");
+            finish();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }
