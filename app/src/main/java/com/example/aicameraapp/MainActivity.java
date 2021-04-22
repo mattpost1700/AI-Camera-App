@@ -28,8 +28,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.database.Prediction;
+import com.example.database.PredictionDatabase;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private Button analyzeButton;
     private Button importButton;
     private TextView prediction;
-    private boolean checkPicture = false;
 
     /*I'll be adding other models that we can experiment with
       to the project. In order to use a different model, replace
@@ -78,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
         Toolbar toolbar = findViewById(R.id.mainTB);
         setSupportActionBar(toolbar);
         getPermission();
@@ -86,6 +92,10 @@ public class MainActivity extends AppCompatActivity {
         importButton = findViewById(R.id.importButton);
         imageView = findViewById(R.id.imageCapture);
         prediction = findViewById(R.id.predictions);
+
+        if (savedInstanceState != null) {
+            prediction.setText(savedInstanceState.getString("result"));
+        }
 
         captureButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Oh pretty please...
-    public void getPermission(){
+    public void getPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(permissions,
@@ -120,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(requestCode == MULTIPLE_PERMISSIONS){
+        if (requestCode == MULTIPLE_PERMISSIONS) {
             Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
         }
     }
@@ -139,20 +149,23 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void displayImage(){
-        if(currentPhotoPath != null){
-            checkPicture = true;
+    private void displayImage() {
+        if (currentPhotoPath != null) {
+            // checkPicture = true; depreciated, try catch to catch if photo exists
             Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
             bitmapForAnalysis = temp;
             imageView.setImageBitmap(temp);
-        }
-        else{
+        } else {
             Toast.makeText(this, "Image Path is null", Toast.LENGTH_LONG).show();
         }
     }
 
     //This is necessary to make sure the photo is always oriented properly
-    private Bitmap fixOrientation(Bitmap bitmap){
+    private Bitmap fixOrientation(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+
         ExifInterface exif = null;
         try {
             exif = new ExifInterface(currentPhotoPath);
@@ -199,18 +212,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //This method will launch the predictions_activity
-    private void analyzeImage() {
-        if (checkPicture) { //if user did select a picture
+    private void analyzeImage() { // replace check picture with try catch for robustness
+        try {//if user did select a picture
             bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
 
             final List<Classifier.Recognition> results = classifier.recognizeImage(bitmapForAnalysis);
 
+            int size = bitmapForAnalysis.getRowBytes() * bitmapForAnalysis.getHeight();
+            ByteBuffer byteBuffer = ByteBuffer.allocate(size);
+            bitmapForAnalysis.copyPixelsToBuffer(byteBuffer);
+            byte[] byteArray = byteBuffer.array();
+
+
+            Prediction p = new Prediction(0, results.toString(), byteArray);
+            Log.d("database", "Prediction before adding to db... id: ? prediction string: " + results.toString() + " bytearr: " + byteArray);
+
+            PredictionDatabase.getDatabase(this);
+            PredictionDatabase.insert(p);
+            PredictionDatabase.insert(new Prediction(0, "please", new byte[1]));
+
             //This toast has been made shorter.
             Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_SHORT).show();
             prediction.setText(results.toString());
-        }
-        else //if user didn't select a picture, will just simply display a toast message
+        } catch (NullPointerException e) {//if user didn't select a picture, will just simply display a toast message
             Toast.makeText(this, "No image has been selected", Toast.LENGTH_LONG).show();
+        }
     }
 
     private File createImageFile() throws IOException {
@@ -253,12 +279,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putString("result", prediction.getText().toString());
+        //savedState.putString("image", imageView.getDrawable());
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedState) {
+        super.onSaveInstanceState(savedState);
+        savedState.putString("result", prediction.getText().toString());
+        //savedState.putString("image", imageView.getDrawable());
+    }
+
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE_CAPTURE) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE) {
             displayImage();
-        }
-        else if(requestCode == REQUEST_IMAGE_SELECT){
+        } else if (requestCode == REQUEST_IMAGE_SELECT) {
             displaySelectedImage(data);
         }
     }
@@ -275,7 +315,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        switch(id){
+        switch (id) {
             case R.id.toPrediction:
                 Log.e("info", "toPrediction clicked");
                 Activity activity = new PredictionActivity();
@@ -298,18 +338,23 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(gallery, REQUEST_IMAGE_SELECT);
     }
 
-    private void displaySelectedImage(Intent data){
-            checkPicture = true;
-            Uri selectedImage = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = getContentResolver().query(selectedImage,
-                    filePathColumn, null, null, null);
-            cursor.moveToFirst();
-            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-            currentPhotoPath = cursor.getString(columnIndex);
-            cursor.close();
-            Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
-            bitmapForAnalysis = temp;
-            imageView.setImageBitmap(temp);
+    private void displaySelectedImage(Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        // checkPicture = true; depreciated, try catch to catch if photo exists
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        currentPhotoPath = cursor.getString(columnIndex);
+        cursor.close();
+        Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
+        bitmapForAnalysis = temp;
+        imageView.setImageBitmap(temp);
     }
+
 }
