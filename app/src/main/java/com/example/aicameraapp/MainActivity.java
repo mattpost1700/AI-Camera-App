@@ -8,7 +8,6 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.Presentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -32,7 +31,6 @@ import android.widget.Toast;
 import com.example.database.Prediction;
 import com.example.database.PredictionDatabase;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -56,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private Button captureButton;
     private Button analyzeButton;
     private Button importButton;
-    private TextView prediction;
+    private TextView predictionTextView;
 
     /*I'll be adding other models that we can experiment with
       to the project. In order to use a different model, replace
@@ -92,10 +90,10 @@ public class MainActivity extends AppCompatActivity {
         analyzeButton = findViewById(R.id.analyzeButton);
         importButton = findViewById(R.id.importButton);
         imageView = findViewById(R.id.imageCapture);
-        prediction = findViewById(R.id.predictions);
+        predictionTextView = findViewById(R.id.predictions);
 
         if (savedInstanceState != null) {
-            prediction.setText(savedInstanceState.getString("result"));
+            predictionTextView.setText(savedInstanceState.getString("result"));
         }
 
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -119,7 +117,9 @@ public class MainActivity extends AppCompatActivity {
         initTensorFlowAndLoadModel();
     }
 
-    //Oh pretty please...
+    /**
+     * Get's permission to use the phone's camera.
+     */
     public void getPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -128,28 +128,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == MULTIPLE_PERMISSIONS) {
-            Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    /*This is necessary into order to properly release resources,
-      the garbage collector doesn't just do it on its own.
-    */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        executor.execute(new Runnable() {
-            @Override
-            public void run() {
-                classifier.close();
-            }
-        });
-    }
-
+    /**
+     * Displays the image in the image view.
+     */
     private void displayImage() {
         if (currentPhotoPath != null) {
             // checkPicture = true; depreciated, try catch to catch if photo exists
@@ -162,6 +143,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //This is necessary to make sure the photo is always oriented properly
+    /**
+     * Keeps photo's orientation correct.
+     *
+     * @param bitmap The image bitmap.
+     * @return The image bitmap with the correct orientation.
+     */
     private Bitmap fixOrientation(Bitmap bitmap) {
         if (bitmap == null) {
             return null;
@@ -193,7 +180,9 @@ public class MainActivity extends AppCompatActivity {
         return bitmap;
     }
 
-    //This creates model from the TensorFlow lite file
+    /**
+     * This creates model from the TensorFlow lite file.
+     */
     private void initTensorFlowAndLoadModel() {
         executor.execute(new Runnable() {
             @Override
@@ -213,6 +202,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //This method will launch the predictions_activity
+    /**
+     * Analyzes the image for digits using the TensorFlow model.
+     */
     private void analyzeImage() { // replace check picture with try catch for robustness
         try {//if user did select a picture
             bitmapForAnalysis = Bitmap.createScaledBitmap(bitmapForAnalysis, INPUT_SIZE, INPUT_SIZE, false);
@@ -240,6 +232,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Displays the formatted result in predictionsTextView.
+     *
+     * @param resultString The AI's result output as a string.
+     */
     private void displayPredictionResult(String resultString) {
         Log.d("displayPredictionResult", "result string: " + resultString);
         String outputString = "";
@@ -257,9 +254,14 @@ public class MainActivity extends AppCompatActivity {
         }
         outputString = outputString.substring(0, outputString.length() - 1); // removes last new line character
 
-        prediction.setText(outputString);
+        predictionTextView.setText(outputString);
     }
 
+    /**
+     * Creates the file from global variable currentPhotoPath
+     * @return The image as a File object.
+     * @throws IOException On input error
+     */
     private File createImageFile() throws IOException {
         // Create an image file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -276,6 +278,9 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
+    /**
+     * Sends an intent to take a picture with the phone's camera.
+     */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -299,20 +304,52 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Sends an intent to get a picture from the phone's gallery.
+     */
+    private void openGallery() {
+        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(gallery, REQUEST_IMAGE_SELECT);
+    }
+
+    /**
+     * Displays the selected image in the image view.
+     *
+     * @return A null value if there is not picture to display.
+     * @param data The selected image.
+     */
+    private void displaySelectedImage(Intent data) {
+        if (data == null) {
+            return;
+        }
+
+        // checkPicture = true; depreciated, try catch to catch if photo exists
+        Uri selectedImage = data.getData();
+        String[] filePathColumn = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(selectedImage,
+                filePathColumn, null, null, null);
+        cursor.moveToFirst();
+        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+        currentPhotoPath = cursor.getString(columnIndex);
+        cursor.close();
+        Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
+        bitmapForAnalysis = temp;
+        imageView.setImageBitmap(temp);
+    }
+
     @Override
     protected void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        savedState.putString("result", prediction.getText().toString());
+        savedState.putString("result", predictionTextView.getText().toString());
         //savedState.putString("image", imageView.getDrawable());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        savedState.putString("result", prediction.getText().toString());
+        savedState.putString("result", predictionTextView.getText().toString());
         //savedState.putString("image", imageView.getDrawable());
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -354,28 +391,27 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void openGallery() {
-        Intent gallery = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.INTERNAL_CONTENT_URI);
-        startActivityForResult(gallery, REQUEST_IMAGE_SELECT);
-    }
-
-    private void displaySelectedImage(Intent data) {
-        if (data == null) {
-            return;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == MULTIPLE_PERMISSIONS) {
+            Toast.makeText(this, "Permissions Granted", Toast.LENGTH_SHORT).show();
         }
-
-        // checkPicture = true; depreciated, try catch to catch if photo exists
-        Uri selectedImage = data.getData();
-        String[] filePathColumn = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getContentResolver().query(selectedImage,
-                filePathColumn, null, null, null);
-        cursor.moveToFirst();
-        int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-        currentPhotoPath = cursor.getString(columnIndex);
-        cursor.close();
-        Bitmap temp = fixOrientation(BitmapFactory.decodeFile(currentPhotoPath));
-        bitmapForAnalysis = temp;
-        imageView.setImageBitmap(temp);
     }
+
+    /*This is necessary into order to properly release resources,
+      the garbage collector doesn't just do it on its own.
+    */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                classifier.close();
+            }
+        });
+    }
+
 
 }
