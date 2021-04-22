@@ -22,7 +22,7 @@
         android:id="@+id/mainTB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/purple_200"
+        android:background="@color/design_default_color_primary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintBottom_toTopOf="@+id/imageCapture"
@@ -36,19 +36,18 @@
         android:id="@+id/predictions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/predictions"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.617" />
 
     <ImageView
         android:id="@+id/imageCapture"
-        android:layout_width="250sp"
-        android:layout_height="250sp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:contentDescription="@string/the_image_preview"
         app:layout_constraintBottom_toTopOf="@+id/predictions"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,7 +76,7 @@
             android:id="@+id/captureButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/capture_button" />
 
@@ -85,7 +84,7 @@
             android:id="@+id/importButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/import_picture" />
 
@@ -93,7 +92,7 @@
             android:id="@+id/analyzeButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1.0"
             android:text="@string/analyze_button" />
 
