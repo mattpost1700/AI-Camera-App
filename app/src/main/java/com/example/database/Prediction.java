@@ -27,5 +27,5 @@ public class Prediction {
 
     // from https://stackoverflow.com/questions/46337519/how-insert-image-in-room-persistence-library
     @ColumnInfo(typeAffinity = ColumnInfo.BLOB)
-    public String image_byte_arr;
+    public byte[] image_byte_arr;
 }

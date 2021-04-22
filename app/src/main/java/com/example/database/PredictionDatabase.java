@@ -2,6 +2,7 @@ package com.example.database;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Database;
@@ -25,28 +26,26 @@ public abstract class PredictionDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (PredictionDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), PredictionDatabase.class, "joke_database").addCallback(createJokeDatabaseCallback).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), PredictionDatabase.class, "joke_database").addCallback(createPredictionDatabaseCallback).build();
                 }
             }
         }
         return INSTANCE;
     }
 
-    private static RoomDatabase.Callback createJokeDatabaseCallback = new RoomDatabase.Callback() {
+    private static RoomDatabase.Callback createPredictionDatabaseCallback = new RoomDatabase.Callback() {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            // FIXME
-//            for (int i = 0; i < DefaultContent.TITLE.length; i++) {
-//                insert(new Prediction(0, DefaultContent., DefaultContent.SETUP[i], DefaultContent.PUNCHLINE[i], false));
-//            }
+            insert(new Prediction(99, "Not a prediction", new byte[5])); // for testing
         }
     };
 
-    // varys from notes, types and returns
+    // varies from notes, types and returns
     public static void insert(Prediction prediction) {
         new AsyncTask<Prediction, Void, Void>() {
             protected Void doInBackground(Prediction... predictions) { // Background Thread
-                INSTANCE.predictionDAO().insert(predictions);
+                INSTANCE.predictionDAO().insert(predictions[0]);
+                Log.d("database", "Prediction added to db... id: " + predictions[0].predictionId + " prediction string: " + predictions[0].prediction_string + " bytearr: " + predictions[0].image);
                 return null;
             }
         }.execute(prediction);
