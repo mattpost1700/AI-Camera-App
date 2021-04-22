@@ -8,6 +8,7 @@ import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.Presentation;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -233,10 +234,30 @@ public class MainActivity extends AppCompatActivity {
 
             //This toast has been made shorter.
             Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_SHORT).show();
-            prediction.setText(results.toString());
+            displayPredictionResult(results.toString());
         } catch (NullPointerException e) {//if user didn't select a picture, will just simply display a toast message
             Toast.makeText(this, "No image has been selected", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void displayPredictionResult(String resultString) {
+        Log.d("displayPredictionResult", "result string: " + resultString);
+        String outputString = "";
+
+        resultString = resultString.substring(1); // removes first [
+        String[] percents = resultString.split(",");
+
+        for(int i = 0; i < percents.length && i < 3; i++) { // at most top 3 predictions
+            String prediction = percents[i];
+            Log.d("displayPredictionResult", "prediction @" + i + " " + prediction);
+
+            String digit   = prediction.substring(prediction.indexOf('[') + 1, prediction.indexOf(']'));
+            String percent = prediction.substring(prediction.indexOf('(') + 1, prediction.indexOf(')'));
+            outputString += "There is a " + percent + " chance the number is " + digit + '\n';
+        }
+        outputString = outputString.substring(0, outputString.length() - 1); // removes last new line character
+
+        prediction.setText(outputString);
     }
 
     private File createImageFile() throws IOException {
