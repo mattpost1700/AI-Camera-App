@@ -82,7 +82,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Toolbar toolbar = findViewById(R.id.mainTB);
         setSupportActionBar(toolbar);
         getPermission();
@@ -379,13 +378,13 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.toPrediction:
-                Log.e("info", "toPrediction clicked");
+                Log.d("info", "toPrediction clicked");
                 Activity activity = new PredictionActivity();
                 Intent intent = new Intent(this, PredictionActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.toSettings:
-                Log.e("info", "toSettings clicked");
+                Log.d("info", "toSettings clicked");
                 Activity activity2 = new SettingsActivity();
                 Intent intent2 = new Intent(this, SettingsActivity.class);
                 startActivity(intent2);
