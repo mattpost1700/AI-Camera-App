@@ -94,6 +94,9 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             predictionTextView.setText(savedInstanceState.getString("result"));
+            currentPhotoPath = savedInstanceState.getString("imageFilePath");
+            if(currentPhotoPath != null && currentPhotoPath != "")
+                displayImage();
         }
 
         captureButton.setOnClickListener(new View.OnClickListener() {
@@ -341,6 +344,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
         savedState.putString("result", predictionTextView.getText().toString());
+        savedState.putString("imageFilePath", currentPhotoPath);
         //savedState.putString("image", imageView.getDrawable());
     }
 
