@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toTopOf="@id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mainTB" >
+        app:layout_constraintTop_toBottomOf="@+id/predictionTB">
         <!--android:entries="@array/Predictions"-->
     </ListView>
 
@@ -43,7 +43,10 @@
         android:layout_marginBottom="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/predictionTB"
+        app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/list_selector_background" />
 
     <!--<ScrollView

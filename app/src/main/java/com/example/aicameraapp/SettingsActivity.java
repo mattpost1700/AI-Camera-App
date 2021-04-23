@@ -1,16 +1,14 @@
 package com.example.aicameraapp;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import androidx.appcompat.app.ActionBar;
+import android.view.View;
+import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
-import androidx.preference.PreferenceFragmentCompat;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -20,6 +18,19 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
         Toolbar toolbar = findViewById(R.id.settingsTB);
         setSupportActionBar(toolbar);
+        ToggleButton toggle = findViewById(R.id.themeSwitchBtn);
+        toggle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                    toggle.setChecked(false);
+                } else {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                    toggle.setChecked(true);
+                }
+            }
+        });
     }
 
     @Override
@@ -29,6 +40,7 @@ public class SettingsActivity extends AppCompatActivity {
         return true;
     }
 
+    //menu item logic to go back to main
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

@@ -25,6 +25,7 @@ public class PredictionActivity  extends AppCompatActivity {
         return true;
     }
 
+    //menu item logic to go back to main
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

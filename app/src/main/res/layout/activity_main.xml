@@ -76,7 +76,7 @@
             android:id="@+id/captureButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:text="@string/capture_button" />
 
@@ -84,7 +84,7 @@
             android:id="@+id/importButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:text="@string/import_picture" />
 
@@ -92,7 +92,7 @@
             android:id="@+id/analyzeButton"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1.0"
             android:text="@string/analyze_button" />
 

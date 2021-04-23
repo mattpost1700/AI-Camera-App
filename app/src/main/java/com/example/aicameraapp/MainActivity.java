@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState != null) {
             predictionTextView.setText(savedInstanceState.getString("result"));
             currentPhotoPath = savedInstanceState.getString("imageFilePath");
-            if(currentPhotoPath != null && currentPhotoPath != "")
+            if(currentPhotoPath != null && !currentPhotoPath.equals(""))
                 displayImage();
         }
 
