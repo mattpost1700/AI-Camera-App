@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SavePredictionDialog.ButtonClickListner {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1001;
     private static final int REQUEST_IMAGE_SELECT = 1002;
@@ -54,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private Button captureButton;
     private Button analyzeButton;
     private Button importButton;
-    private TextView predictionTextView;
 
     /*I'll be adding other models that we can experiment with
       to the project. In order to use a different model, replace
@@ -89,10 +88,8 @@ public class MainActivity extends AppCompatActivity {
         analyzeButton = findViewById(R.id.analyzeButton);
         importButton = findViewById(R.id.importButton);
         imageView = findViewById(R.id.imageCapture);
-        predictionTextView = findViewById(R.id.predictions);
 
         if (savedInstanceState != null) {
-            predictionTextView.setText(savedInstanceState.getString("result"));
             currentPhotoPath = savedInstanceState.getString("imageFilePath");
             if(currentPhotoPath != null && !currentPhotoPath.equals(""))
                 displayImage();
@@ -252,11 +249,24 @@ public class MainActivity extends AppCompatActivity {
 
             String digit   = prediction.substring(prediction.indexOf('[') + 1, prediction.indexOf(']'));
             String percent = prediction.substring(prediction.indexOf('(') + 1, prediction.indexOf(')'));
-            outputString += "There is a " + percent + " chance the number is " + digit + '\n';
+            // outputString += "There is a " + percent + " chance the number is " + digit + '\n';
+            outputString += percent + " chance the number is " + digit + '\n';
         }
         outputString = outputString.substring(0, outputString.length() - 1); // removes last new line character
 
-        predictionTextView.setText(outputString);
+        SavePredictionDialog dialog = new SavePredictionDialog();
+        Bundle b = new Bundle();
+        b.putString("title", getResources().getString(R.string.save_dialog_title));
+        b.putString("message", outputString);
+        b.putString("positiveButton", getResources().getString(R.string.save_dialog_positive_button));
+        b.putString("negativeButton", getResources().getString(R.string.save_dialog_negative_button));
+        dialog.setArguments(b);
+        dialog.show(getSupportFragmentManager(), "saveDialog");
+    }
+
+    public void onSaveClick() {
+        Log.d("database", "onSaveClick invoked.");
+        // save to db
     }
 
     /**
@@ -342,16 +352,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        savedState.putString("result", predictionTextView.getText().toString());
         savedState.putString("imageFilePath", currentPhotoPath);
-        //savedState.putString("image", imageView.getDrawable());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedState) {
         super.onSaveInstanceState(savedState);
-        savedState.putString("result", predictionTextView.getText().toString());
-        //savedState.putString("image", imageView.getDrawable());
+        savedState.putString("imageFilePath", currentPhotoPath);
     }
 
     @Override

@@ -30,4 +30,7 @@
     <string name="todo">TODO</string>
     <string name="switch_to_dark_theme">Switch theme</string>
     <string name="togglebutton">ToggleButton</string>
+    <string name="save_dialog_title">Save Prediction?</string>
+    <string name="save_dialog_positive_button">Save</string>
+    <string name="save_dialog_negative_button">Cancel</string>
 </resources>
