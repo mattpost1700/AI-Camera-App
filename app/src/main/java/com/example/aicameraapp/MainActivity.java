@@ -264,8 +264,12 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
         dialog.show(getSupportFragmentManager(), "saveDialog");
     }
 
+    /**
+     * Saves current prediction to db.
+     */
     public void onSaveClick() {
         Log.d("database", "onSaveClick invoked.");
+
         // save to db
     }
 
