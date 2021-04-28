@@ -8,14 +8,11 @@ import androidx.room.PrimaryKey;
 
 @Entity(tableName = "predictions")
 public class Prediction {
-    int predictionId;
-    String predictionsAsString;
-    byte[] image;
 
-    public Prediction(int predictionId, String predictionsAsString, byte[] image) {
-        this.predictionId = predictionId;
-        this.predictionsAsString = predictionsAsString;
-        this.image = image;
+    public Prediction(int id, String prediction_string, byte[] image_byte_arr) {
+        this.id = id;
+        this.prediction_string = prediction_string;
+        this.image_byte_arr = image_byte_arr;
     }
 
     @PrimaryKey(autoGenerate = true)

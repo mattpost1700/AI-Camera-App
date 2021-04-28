@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
         analyzeButton = findViewById(R.id.analyzeButton);
         importButton = findViewById(R.id.importButton);
         imageView = findViewById(R.id.imageCapture);
+        PredictionDatabase.getDatabase(getApplication());
 
         if (savedInstanceState != null) {
             currentPhotoPath = savedInstanceState.getString("imageFilePath");
@@ -218,10 +219,8 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
 
             Prediction p = new Prediction(0, results.toString(), byteArray);
             Log.d("database", "Prediction before adding to db... id: ? prediction string: " + results.toString() + " bytearr: " + byteArray);
-
-            PredictionDatabase.getDatabase(this);
             PredictionDatabase.insert(p);
-            PredictionDatabase.insert(new Prediction(0, "please", new byte[1]));
+            //PredictionDatabase.insert(new Prediction(1, "please", new byte[1]));
 
             //This toast has been made shorter.
             Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_SHORT).show();

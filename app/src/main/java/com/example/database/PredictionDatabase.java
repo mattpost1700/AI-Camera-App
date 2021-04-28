@@ -26,7 +26,7 @@ public abstract class PredictionDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (PredictionDatabase.class) {
                 if (INSTANCE == null) {
-                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), PredictionDatabase.class, "joke_database").addCallback(createPredictionDatabaseCallback).build();
+                    INSTANCE = Room.databaseBuilder(context.getApplicationContext(), PredictionDatabase.class, "prediction_database").addCallback(createPredictionDatabaseCallback).build();
                 }
             }
         }
@@ -44,8 +44,8 @@ public abstract class PredictionDatabase extends RoomDatabase {
     public static void insert(Prediction prediction) {
         new AsyncTask<Prediction, Void, Void>() {
             protected Void doInBackground(Prediction... predictions) { // Background Thread
-                INSTANCE.predictionDAO().insert(predictions[0]);
-                Log.d("database", "Prediction added to db... id: " + predictions[0].predictionId + " prediction string: " + predictions[0].prediction_string + " bytearr: " + predictions[0].image);
+                INSTANCE.predictionDAO().insert(predictions);
+                Log.d("database", "Prediction added to db... id: " + predictions[0].id + " prediction string: " + predictions[0].prediction_string + " bytearr: " + predictions[0].image_byte_arr);
                 return null;
             }
         }.execute(prediction);
