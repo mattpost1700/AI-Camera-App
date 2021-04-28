@@ -33,4 +33,7 @@
     <string name="save_dialog_title">Save Prediction?</string>
     <string name="save_dialog_positive_button">Save</string>
     <string name="save_dialog_negative_button">Cancel</string>
+    <string name="last_entry_to_database">Last Entry</string>
+    <string name="choose_entry">Choose Entry</string>
+    <string name="confirm_choice">Confirm Choice</string>
 </resources>

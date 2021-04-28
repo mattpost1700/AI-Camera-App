@@ -36,7 +36,7 @@ public abstract class PredictionDatabase extends RoomDatabase {
     private static RoomDatabase.Callback createPredictionDatabaseCallback = new RoomDatabase.Callback() {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
-            insert(new Prediction(99, "Not a prediction", new byte[5])); // for testing
+            //insert(new Prediction(99, "Not a prediction", new byte[5])); // for testing
         }
     };
 
@@ -51,7 +51,7 @@ public abstract class PredictionDatabase extends RoomDatabase {
         }.execute(prediction);
     }
 
-    public static void getPrediction(int id, final PredictionListener listener) {
+    public static void getById(int id, final PredictionListener listener) {
         new AsyncTask<Integer, Void, Prediction>() {
             @Override
             protected Prediction doInBackground(Integer... integers) { // Background Thread

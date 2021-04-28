@@ -12,12 +12,12 @@ import androidx.fragment.app.DialogFragment;
 
 public class SavePredictionDialog extends DialogFragment {
 
-    public interface ButtonClickListner {
+    public interface ButtonClickListener {
         public void onSaveClick();
     }
 
 
-    private ButtonClickListner listener;
+    private ButtonClickListener listener;
     private String mTitle = "";
     private String mMessage = "";
     private String mPositiveButton = "";
@@ -62,7 +62,7 @@ public class SavePredictionDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listener = (ButtonClickListner) context;
+            listener = (ButtonClickListener) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement ButtonClickListener()");
         }

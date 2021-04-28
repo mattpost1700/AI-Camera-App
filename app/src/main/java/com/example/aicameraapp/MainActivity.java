@@ -25,7 +25,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.database.Prediction;
@@ -40,7 +39,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity implements SavePredictionDialog.ButtonClickListner {
+public class MainActivity extends AppCompatActivity implements SavePredictionDialog.ButtonClickListener {
 
     private static final int REQUEST_IMAGE_CAPTURE = 1001;
     private static final int REQUEST_IMAGE_SELECT = 1002;
@@ -51,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
     private String currentPhotoPath;
     private ImageView imageView;
     private Bitmap bitmapForAnalysis;
+    private String resultStringToSave;
+    private byte[] byteArrayToSave;
     private Button captureButton;
     private Button analyzeButton;
     private Button importButton;
@@ -214,19 +215,27 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
             int size = bitmapForAnalysis.getRowBytes() * bitmapForAnalysis.getHeight();
             ByteBuffer byteBuffer = ByteBuffer.allocate(size);
             bitmapForAnalysis.copyPixelsToBuffer(byteBuffer);
-            byte[] byteArray = byteBuffer.array();
+
+            // These need to be saved to private member variables in order
+            //  to prevent successively piping too much info down multiple methods
+
+            byteArrayToSave = byteBuffer.array();
+            resultStringToSave = results.toString();
 
 
+            //This code has been moved to the onSaveClick Interface method
+            /*
             Prediction p = new Prediction(0, results.toString(), byteArray);
             Log.d("database", "Prediction before adding to db... id: ? prediction string: " + results.toString() + " bytearr: " + byteArray);
             PredictionDatabase.insert(p);
             //PredictionDatabase.insert(new Prediction(1, "please", new byte[1]));
+            */
 
             //This toast has been made shorter.
             Toast.makeText(this, "Picture has been successfully analyzed", Toast.LENGTH_SHORT).show();
             displayPredictionResult(results.toString());
         } catch (NullPointerException e) {//if user didn't select a picture, will just simply display a toast message
-            Toast.makeText(this, "No image has been selected", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "No image has been selected", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -255,6 +264,7 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
 
         SavePredictionDialog dialog = new SavePredictionDialog();
         Bundle b = new Bundle();
+        b.putString("result_string", resultString);
         b.putString("title", getResources().getString(R.string.save_dialog_title));
         b.putString("message", outputString);
         b.putString("positiveButton", getResources().getString(R.string.save_dialog_positive_button));
@@ -268,7 +278,9 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
      */
     public void onSaveClick() {
         Log.d("database", "onSaveClick invoked.");
-
+        Prediction p = new Prediction(0, resultStringToSave, byteArrayToSave);
+        Log.d("database", "Prediction before adding to db... id: ? prediction string: " + resultStringToSave + " bytearr: " + byteArrayToSave);
+        PredictionDatabase.insert(p);
         // save to db
     }
 
