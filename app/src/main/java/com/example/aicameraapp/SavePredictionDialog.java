@@ -16,7 +16,8 @@ public class SavePredictionDialog extends DialogFragment {
         public void onSaveClick();
     }
 
-    private ButtonClickListner listner;
+
+    private ButtonClickListner listener;
     private String mTitle = "";
     private String mMessage = "";
     private String mPositiveButton = "";
@@ -36,7 +37,7 @@ public class SavePredictionDialog extends DialogFragment {
                 .setMessage(mMessage)
                 .setPositiveButton(mPositiveButton, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        listner.onSaveClick();
+                        listener.onSaveClick();
                     }
                 })
                 .setNegativeButton(mNegativeButton, new
@@ -61,7 +62,7 @@ public class SavePredictionDialog extends DialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         try {
-            listner = (ButtonClickListner) context;
+            listener = (ButtonClickListner) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString() + " must implement ButtonClickListener()");
         }
