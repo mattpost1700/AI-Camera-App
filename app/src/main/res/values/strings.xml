@@ -27,7 +27,6 @@
     <string name="scan">Scan</string>
     <string name="import_picture">Import Picture</string>
     <string name="hello_world_splash">Hello World, splash</string>
-    <string name="todo">TODO</string>
     <string name="switch_to_dark_theme">Switch theme</string>
     <string name="togglebutton">ToggleButton</string>
     <string name="save_dialog_title">Save Prediction?</string>
@@ -36,4 +35,6 @@
     <string name="last_entry_to_database">Last Entry</string>
     <string name="choose_entry">Choose Entry</string>
     <string name="confirm_choice">Confirm Choice</string>
+    <string name="reset_database_data">reset database data</string>
+    <string name="reset">Reset</string>
 </resources>

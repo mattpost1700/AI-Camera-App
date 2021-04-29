@@ -18,6 +18,9 @@ public interface PredictionDAO {
     @Query("SELECT * FROM predictions WHERE rowid = :rowId")
     Prediction getById(int rowId);
 
+    @Query("DELETE FROM predictions")
+    void resetData();
+
     @Insert
     void insert(Prediction... predictions);
 

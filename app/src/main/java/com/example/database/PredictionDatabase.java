@@ -75,15 +75,6 @@ public abstract class PredictionDatabase extends RoomDatabase {
             }
         }.execute(prediction);
     }
-//    From notes (and WRONG)
-//    public static void delete(int predictionId) {
-//        new AsyncTask<Integer, Void, Void>() {
-//            protected Void doInBackground(Integer... integers) {
-//                INSTANCE.predictionDAO().delete(integers[0]);
-//                return null;
-//            }
-//        }.execute(predictionId);
-//    }
 
     public static void update(Prediction prediction) {
         new AsyncTask<Prediction, Void, Void>() {
@@ -92,5 +83,14 @@ public abstract class PredictionDatabase extends RoomDatabase {
                 return null;
             }
         }.execute(prediction);
+    }
+
+    public static void resetData(){
+        new AsyncTask<Prediction, Void, Void>() {
+            protected Void doInBackground(Prediction... predictions) {
+                INSTANCE.predictionDAO().resetData();
+                return null;
+            }
+        }.execute();
     }
 }

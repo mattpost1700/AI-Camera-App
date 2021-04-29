@@ -5,10 +5,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ToggleButton;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.Toolbar;
+
+import com.example.database.PredictionDatabase;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -19,6 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.settingsTB);
         setSupportActionBar(toolbar);
         ToggleButton toggle = findViewById(R.id.themeSwitchBtn);
+        Button resetBtn = findViewById(R.id.resetButton);
         toggle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -29,6 +33,12 @@ public class SettingsActivity extends AppCompatActivity {
                     AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
                     toggle.setChecked(true);
                 }
+            }
+        });
+        resetBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PredictionDatabase.resetData();
             }
         });
     }
