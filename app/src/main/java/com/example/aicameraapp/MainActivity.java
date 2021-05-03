@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.FormatFlagsConversionMismatchException;
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -246,6 +247,24 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
      */
     private void displayPredictionResult(String resultString) {
         Log.d("displayPredictionResult", "result string: " + resultString);
+
+        SavePredictionDialog dialog = new SavePredictionDialog();
+        Bundle b = new Bundle();
+        b.putString("result_string", resultString);
+        b.putString("title", getResources().getString(R.string.save_dialog_title));
+        b.putString("message", formatText(resultString));
+        b.putString("positiveButton", getResources().getString(R.string.save_dialog_positive_button));
+        b.putString("negativeButton", getResources().getString(R.string.save_dialog_negative_button));
+        dialog.setArguments(b);
+        dialog.show(getSupportFragmentManager(), "saveDialog");
+    }
+
+    /**
+     * Formats text for dialog
+     * @param resultString AI's output
+     * @return formatted string
+     */
+    public String formatText(String resultString) {
         String outputString = "";
 
         resultString = resultString.substring(1); // removes first [
@@ -260,17 +279,8 @@ public class MainActivity extends AppCompatActivity implements SavePredictionDia
             // outputString += "There is a " + percent + " chance the number is " + digit + '\n';
             outputString += percent + " chance the number is " + digit + '\n';
         }
-        outputString = outputString.substring(0, outputString.length() - 1); // removes last new line character
 
-        SavePredictionDialog dialog = new SavePredictionDialog();
-        Bundle b = new Bundle();
-        b.putString("result_string", resultString);
-        b.putString("title", getResources().getString(R.string.save_dialog_title));
-        b.putString("message", outputString);
-        b.putString("positiveButton", getResources().getString(R.string.save_dialog_positive_button));
-        b.putString("negativeButton", getResources().getString(R.string.save_dialog_negative_button));
-        dialog.setArguments(b);
-        dialog.show(getSupportFragmentManager(), "saveDialog");
+        return outputString.substring(0, outputString.length() - 1); // removes last new line character
     }
 
     /**

@@ -6,8 +6,7 @@
     <ImageView android:id="@+id/splashscreen" android:layout_width="wrap_content"
         android:layout_height="fill_parent"
         android:src="@drawable/temp_splash_screen"
-        android:layout_gravity="center"
-        android:contentDescription="@string/todo" />
+        android:layout_gravity="center"/>
 
     <TextView android:layout_width="fill_parent"
         android:layout_height="wrap_content"

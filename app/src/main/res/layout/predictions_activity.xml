@@ -22,8 +22,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
 
-    <ListView
-        android:id="@+id/predictionsListView"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/predictionsRecyclerView"
         style="@android:style/Widget.Material.ListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
@@ -32,9 +32,10 @@
         app:layout_constraintBottom_toTopOf="@id/imageView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/predictionTB">
+        app:layout_constraintTop_toBottomOf="@+id/predictionTB"
+        tools:listitem="@layout/list_item">
         <!--android:entries="@array/Predictions"-->
-    </ListView>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <ImageView
         android:id="@+id/imageView"
@@ -44,52 +45,11 @@
         android:contentDescription="todo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.924"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/predictionTB"
         app:layout_constraintVertical_bias="1.0"
         app:srcCompat="@android:drawable/list_selector_background" />
-
-    <TextView
-        android:id="@+id/lastEntryToDatabase"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:text="@string/last_entry_to_database"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.271"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.149" />
-
-    <EditText
-        android:id="@+id/chooseEntry"
-        android:layout_width="124dp"
-        android:layout_height="42dp"
-        android:layout_marginEnd="36dp"
-        android:ems="10"
-        android:hint="@string/choose_entry"
-        android:importantForAutofill="no"
-        android:inputType="textPersonName"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/lastEntryToDatabase"
-        app:layout_constraintTop_toTopOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.291" />
-
-    <Button
-        android:id="@+id/confirmChoice"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/confirm_choice"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView"
-        app:layout_constraintEnd_toStartOf="@+id/imageView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/chooseEntry"
-        app:layout_constraintTop_toBottomOf="@+id/chooseEntry"
-        app:layout_constraintVertical_bias="0.714" />
 
     <!--<ScrollView
         android:layout_width="match_parent"
