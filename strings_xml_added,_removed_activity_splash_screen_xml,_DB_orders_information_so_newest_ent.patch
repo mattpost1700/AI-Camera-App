@@ -1,0 +1,165 @@
+Index: app/src/main/res/layout/activity_splash_screen.xml
+===================================================================
+--- app/src/main/res/layout/activity_splash_screen.xml	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/res/layout/activity_splash_screen.xml	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
+@@ -1,15 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+-    android:orientation="vertical" android:layout_width="fill_parent"
+-    android:layout_height="fill_parent">
+-
+-    <ImageView android:id="@+id/splashscreen" android:layout_width="wrap_content"
+-        android:layout_height="fill_parent"
+-        android:src="@drawable/temp_splash_screen"
+-        android:layout_gravity="center"/>
+-
+-    <TextView android:layout_width="fill_parent"
+-        android:layout_height="wrap_content"
+-        android:text="@string/hello_world_splash"/>
+-
+-</LinearLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/database/PredictionDAO.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/database/PredictionDAO.java	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/java/com/example/database/PredictionDAO.java	(date 1620007476255)
+@@ -12,7 +12,7 @@
+ @Dao
+ public interface PredictionDAO {
+ 
+-    @Query("SELECT * FROM predictions ORDER BY prediction_string COLLATE NOCASE, rowid")
++    @Query("SELECT * FROM predictions ORDER BY rowid DESC")
+     LiveData<List<Prediction>> getAll();
+ 
+     @Query("SELECT * FROM predictions WHERE rowid = :rowId")
+Index: app/src/main/res/layout/predictions_activity.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/predictions_activity.xml	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/res/layout/predictions_activity.xml	(date 1620006956727)
+@@ -34,7 +34,6 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/predictionTB"
+         tools:listitem="@layout/list_item">
+-        <!--android:entries="@array/Predictions"-->
+     </androidx.recyclerview.widget.RecyclerView>
+ 
+     <ImageView
+@@ -42,7 +41,7 @@
+         android:layout_width="200dp"
+         android:layout_height="200dp"
+         android:layout_marginBottom="32dp"
+-        android:contentDescription="todo"
++        android:contentDescription="@string/app_name"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintHorizontal_bias="0.497"
+@@ -51,19 +50,4 @@
+         app:layout_constraintVertical_bias="1.0"
+         app:srcCompat="@android:drawable/list_selector_background" />
+ 
+-    <!--<ScrollView
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent">
+-
+-        <LinearLayout
+-            android:id="@+id/predictionsLinearLayout"
+-            android:layout_width="match_parent"
+-            android:layout_height="wrap_content"
+-            android:orientation="vertical" />
+-    </ScrollView>-->
+-
+ </androidx.constraintlayout.widget.ConstraintLayout>
+\ No newline at end of file
+Index: app/src/main/java/com/example/aicameraapp/SplashScreenActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/aicameraapp/SplashScreenActivity.java	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/java/com/example/aicameraapp/SplashScreenActivity.java	(date 1620007101488)
+@@ -15,7 +15,7 @@
+     @Override
+     public void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);
+-        setContentView(R.layout.activity_splash_screen);
++        //setContentView(R.layout.activity_splash_screen);
+ 
+         /* New Handler to start the Menu-Activity
+          * and close this Splash-Screen after some seconds.*/
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/res/values/strings.xml	(date 1620007234858)
+@@ -1,6 +1,6 @@
+ <resources>
+     <string name="app_name">AI Camera App</string>
+-    <string name="title_activity_settings">SettingsActivity</string>
++    <string name="title_activity_settings">Settings Activity</string>
+ 
+     <!-- Preference Titles -->
+     <string name="messages_header">Messages</string>
+@@ -11,7 +11,7 @@
+     <string name="reply_title">Default reply action</string>
+ 
+     <!-- Sync Preferences -->
+-    <string name="sync_title">Sync email periodically</string>
++    <string name="sync_title">Sync Email Periodically</string>
+     <string name="attachment_title">Download incoming attachments</string>
+     <string name="attachment_summary_on">Automatically download attachments for incoming emails
+     </string>
+@@ -21,20 +21,21 @@
+     <string name="capture_button">Take Photo</string>
+     <string name="analyze_button">Guess Digit</string>
+     <string name="predictions">Predictions</string>
+-    <string name="the_image_preview">The image preview</string>
++    <string name="the_image_preview">The Image Preview</string>
+     <string name="prediction_stats">Prediction Stats</string>
+     <string name="settings">Settings</string>
+     <string name="scan">Scan</string>
+     <string name="import_picture">Import Picture</string>
+     <string name="hello_world_splash">Hello World, splash</string>
+-    <string name="switch_to_dark_theme">Switch theme</string>
+-    <string name="togglebutton">ToggleButton</string>
++    <string name="switch_to_dark_theme">Switch Theme</string>
++    <string name="togglebutton">Toggle Button</string>
+     <string name="save_dialog_title">Save Prediction?</string>
+     <string name="save_dialog_positive_button">Save</string>
+     <string name="save_dialog_negative_button">Cancel</string>
+     <string name="last_entry_to_database">Last Entry</string>
+     <string name="choose_entry">Choose Entry</string>
+     <string name="confirm_choice">Confirm Choice</string>
+-    <string name="reset_database_data">reset database data</string>
++    <string name="reset_database_data">Reset Database Data</string>
+     <string name="reset">Reset</string>
++    <string name="prediction_activity">Prediction Activity</string>
+ </resources>
+\ No newline at end of file
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/AndroidManifest.xml	(revision 4ba9dbcb7c45e7eda74bc9b31df79986e02407c5)
++++ app/src/main/AndroidManifest.xml	(date 1620007234862)
+@@ -29,7 +29,7 @@
+         <activity
+             android:name=".PredictionActivity"
+             android:screenOrientation="portrait"
+-            android:label="PredictionActivity">
++            android:label="@string/prediction_activity">
+         </activity>
+         <activity
+             android:name=".MainActivity"
