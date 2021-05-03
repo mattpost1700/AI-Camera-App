@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AI Camera App</string>
+    <string name="app_name">AI Cam</string>
     <string name="title_activity_settings">Settings Activity</string>
 
     <!-- Preference Titles -->
