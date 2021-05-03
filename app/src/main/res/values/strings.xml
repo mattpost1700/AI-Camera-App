@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">AI Camera App</string>
-    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="title_activity_settings">Settings Activity</string>
 
     <!-- Preference Titles -->
     <string name="messages_header">Messages</string>
@@ -11,7 +11,7 @@
     <string name="reply_title">Default reply action</string>
 
     <!-- Sync Preferences -->
-    <string name="sync_title">Sync email periodically</string>
+    <string name="sync_title">Sync Email Periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
@@ -21,20 +21,21 @@
     <string name="capture_button">Take Photo</string>
     <string name="analyze_button">Guess Digit</string>
     <string name="predictions">Predictions</string>
-    <string name="the_image_preview">The image preview</string>
+    <string name="the_image_preview">The Image Preview</string>
     <string name="prediction_stats">Prediction Stats</string>
     <string name="settings">Settings</string>
     <string name="scan">Scan</string>
     <string name="import_picture">Import Picture</string>
     <string name="hello_world_splash">Hello World, splash</string>
-    <string name="switch_to_dark_theme">Switch theme</string>
-    <string name="togglebutton">ToggleButton</string>
+    <string name="switch_to_dark_theme">Switch Theme</string>
+    <string name="togglebutton">Toggle Button</string>
     <string name="save_dialog_title">Save Prediction?</string>
     <string name="save_dialog_positive_button">Save</string>
     <string name="save_dialog_negative_button">Cancel</string>
     <string name="last_entry_to_database">Last Entry</string>
     <string name="choose_entry">Choose Entry</string>
     <string name="confirm_choice">Confirm Choice</string>
-    <string name="reset_database_data">reset database data</string>
+    <string name="reset_database_data">Reset Database Data</string>
     <string name="reset">Reset</string>
+    <string name="prediction_activity">Prediction Activity</string>
 </resources>

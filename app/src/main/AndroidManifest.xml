@@ -29,7 +29,7 @@
         <activity
             android:name=".PredictionActivity"
             android:screenOrientation="portrait"
-            android:label="PredictionActivity">
+            android:label="@string/prediction_activity">
         </activity>
         <activity
             android:name=".MainActivity"

@@ -12,7 +12,7 @@ import androidx.room.Update;
 @Dao
 public interface PredictionDAO {
 
-    @Query("SELECT * FROM predictions ORDER BY prediction_string COLLATE NOCASE, rowid")
+    @Query("SELECT * FROM predictions ORDER BY rowid DESC")
     LiveData<List<Prediction>> getAll();
 
     @Query("SELECT * FROM predictions WHERE rowid = :rowId")
